@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="https://unpkg.com/@passbase/button@v3/button.js"></script>
+    <title>Verify your Identity</title>
+</head>
+
+<body>
+    <img class="img-fluid passbase" src="https://passbase.com/assets/images/logo.png" alt="Passbase" />
+
+    <div class="container">
+        <p class="title">Verify your identity now</p>
+        <h2>Direct Integration</h2>
+        <p class="subtitle">
+            Below is the HTML & Javascript integration:
+        </p>
+        <!-- 1.1. This is the Passbase Component -->
+        <div id="passbase-button"></div>
+
+        <div class="integration-divider"></div>
+        <h2>Hosted Link</h2>
+        <p class="subtitle">
+            Or you can forward users via a custom button to your hosted link:
+        </p>
+
+        <!-- 1.2. This is a link to your url-->
+        <a class="hosted-link-button" href=<%= getEncodedHostedLink %> alt="" target="_blank">Custom Link</a>
+    </div>
+
+    <script type="text/javascript">
+        // This is the logic for the passbase component
+        const element = document.getElementById("passbase-button")
+        const apiKey = "<%= ENV['PASSBASE_PUBLISHABLE_API_KEY'] %>"
+
+        Passbase.renderButton(element, apiKey, {
+            onFinish: (identityAccessKey) => {
+                console.log("Verification completed with identityAccessKey: ", identityAccessKey)
+            },
+            onError: (errorCode) => {
+                console.log("Error: ", errorCode)
+            },
+            onStart: () => {}
+        })
+
+
+        // You can prefill your user's email here to skip the step. Left empty for demo
+        const userEmail = "paul@test.com"
+
+        Passbase.renderButton(element, apiKey, {
+            prefillAttributes: {
+                email: userEmail,
+            }
+        })
+    </script>
+</body>
+
+</html>
